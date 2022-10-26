@@ -7,6 +7,8 @@
 
 Hack space for release testing
 
+Current version: 0.1.0
+
 ### Gradle commands
 
 * `./gradlew format` will format the code using [Spotless][1].

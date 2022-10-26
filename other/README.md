@@ -1,3 +1,3 @@
 # Example module
 
-Delete me and add required modules to the new repo.
+Current version: 0.1.0
