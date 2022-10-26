@@ -1,8 +1,7 @@
-<!-- ChangeMe: replace /multi-module-template in the badge urls below with the name of the repo-->
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Coverage Status](https://coveralls.io/repos/github/creek-service/multi-module-template/badge.svg?branch=main)](https://coveralls.io/github/creek-service/multi-module-template?branch=main)
-[![build](https://github.com/creek-service/multi-module-template/actions/workflows/gradle.yml/badge.svg)](https://github.com/creek-service/multi-module-template/actions/workflows/gradle.yml)
-[![CodeQL](https://github.com/creek-service/multi-module-template/actions/workflows/codeql.yml/badge.svg)](https://github.com/creek-service/multi-module-template/actions/workflows/codeql.yml)
+[![Coverage Status](https://coveralls.io/repos/github/creek-service/creek-release-test/badge.svg?branch=main)](https://coveralls.io/github/creek-service/creek-release-test?branch=main)
+[![build](https://github.com/creek-service/creek-release-test/actions/workflows/gradle.yml/badge.svg)](https://github.com/creek-service/creek-release-test/actions/workflows/gradle.yml)
+[![CodeQL](https://github.com/creek-service/creek-release-test/actions/workflows/codeql.yml/badge.svg)](https://github.com/creek-service/creek-release-test/actions/workflows/codeql.yml)
 
 # Multi-module template Repo
 Template repo used to create other multi-module repos.
@@ -46,10 +45,8 @@ The template sets up the following:
        1. `Actions`-> Add a new repository secret called `COVERALLS_REPO_TOKEN`, grabbing the value from Coveralls.io.,
        2. `Dependabot`-> Add the same `COVERALLS_REPO_TOKEN` repository secret here too
 4. Customise the files in the new repo:
-    1. Replace the `multi-module-template` repo name with the name of the new project.
-       Each place is marked with a `ChangeMe` comment.
     2. Replace the [`example`](example) module with the repos first module.
-    3. Replace the `creek.template.module.multi` module name with a suitable module name.
+    3. Replace the `creek.release.test.example` module name with a suitable module name.
        Each place is marked with a `ChangeMe` comment.
     4. Replace this README.md
     5. Commit changes as a PR (so you can test the PR build works!)
