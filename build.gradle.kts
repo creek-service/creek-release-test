@@ -217,4 +217,34 @@ tasks.coveralls {
     onlyIf{System.getenv("CI") != null}
 }
 
+scmVersion {
+    hooks {
+        // Requires https://github.com/allegro/axion-release-plugin/issues/500 to simplify:
+        pre("fileUpdate", mapOf(
+            "files" to allDocs(),
+            "pattern" to KotlinClosure2(
+                { v: String, _: pl.allegro.tech.build.axion.release.domain.hooks.HookContext -> "\\Q${v}\\E" }
+            ),
+            "replacement" to KotlinClosure2(
+                { v: String, _: pl.allegro.tech.build.axion.release.domain.hooks.HookContext -> v }
+            )
+        ))
+        pre("commit",
+            KotlinClosure2(
+                { v: String, _: pl.allegro.tech.build.axion.release.domain.scm.ScmPosition -> "Release the version $v" }
+            ))
+        post("push")
+    }
+    checks {
+        // Required until https://github.com/allegro/axion-release-plugin/issues/549 fixed:
+        snapshotDependencies.set(false)
+    }
+}
+
+fun allDocs(): List<String> {
+    return fileTree("${projectDir}").matching {
+        include("**/*.md")
+    }.map {it.absolutePath }
+}
+
 defaultTasks("format", "static", "check")
