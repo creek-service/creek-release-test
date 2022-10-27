@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       part:
-        description: "Part to increment: Major, Minor or Patch"
+        description: "Part to increment: Major, Minor, Patch, or Release (case-sensitive)"
         required: true
         default: Patch
 
@@ -21,10 +21,14 @@ jobs:
           cache: gradle
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      - name: Increment Version Part
-        run: |
-          git fetch --tags --unshallow
-          ./gradlew markNextVersion -Prelease.incrementer=increment${{ github.event.inputs.part }}
+      - name: Fetch all tags
+        run: git fetch --tags --unshallow
+      - if: github.event.inputs.part != 'Release'
+        name: Bump version
+        run: ./gradlew markNextVersion -Prelease.incrementer=increment${{ github.event.inputs.part }}
+      - if: github.event.inputs.part == 'Release'
+        name: Release
+        run: ./gradlew release
       - name: Trigger Build
         run: |
           curl -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${GITHUB_TOKEN}" "https://api.github.com/repos/${{ github.repository }}/actions/workflows/gradle.yml/dispatches" -d '{"ref":"main","inputs":{"publish":"true"}}'
