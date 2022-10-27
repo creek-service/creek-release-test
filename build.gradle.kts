@@ -229,10 +229,10 @@ scmVersion {
                 { v: String, _: pl.allegro.tech.build.axion.release.domain.hooks.HookContext -> v }
             )
         ))
-        pre("commit",
-            KotlinClosure2(
-                { v: String, _: pl.allegro.tech.build.axion.release.domain.scm.ScmPosition -> "Release the version $v" }
-            ))
+//        pre("commit",
+//            KotlinClosure2(
+//                { v: String, _: pl.allegro.tech.build.axion.release.domain.scm.ScmPosition -> "Release the version $v" }
+//            ))
     }
     checks {
         // Required until https://github.com/allegro/axion-release-plugin/issues/549 fixed:
