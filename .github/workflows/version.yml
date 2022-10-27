@@ -30,8 +30,8 @@ jobs:
         name: Release
         run: |
           ./gradlew release
-          git checkout -b update_docs_with_new_version
-          git push --set-upstream origin update_docs_with_new_version
+#          git checkout -b update_docs_with_new_version
+#          git push --set-upstream origin update_docs_with_new_version
       - name: Trigger Build
         run: |
           curl -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${GITHUB_TOKEN}" "https://api.github.com/repos/${{ github.repository }}/actions/workflows/gradle.yml/dispatches" -d '{"ref":"main","inputs":{"publish":"true"}}'
