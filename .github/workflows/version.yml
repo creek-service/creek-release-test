@@ -29,7 +29,9 @@ jobs:
       - if: github.event.inputs.part == 'Release'
         name: Release
         run: |
-          ./gradlew release
+          ./gradlew release \
+            -Prelease.customUsername=${{ github.actor }} \
+            -Prelease.customPassword=${{ github.token }}
 #          git checkout -b update_docs_with_new_version
 #          git push --set-upstream origin update_docs_with_new_version
       - name: Trigger Build
