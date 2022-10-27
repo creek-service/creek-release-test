@@ -32,14 +32,6 @@ jobs:
           ./gradlew release \
             -Prelease.customUsername=${{ github.actor }} \
             -Prelease.customPassword=${{ github.token }}
-      - name: Raise Docs PR
-        if: github.event.inputs.part == 'Release'
-        uses: peter-evans/create-pull-request@v4
-        id: cpr
-      - name: PR Details
-        if: ${{ steps.cpr.outputs.pull-request-number }}
-        run: |
-          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
       - name: Trigger Build
         run: |
           curl -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${GITHUB_TOKEN}" "https://api.github.com/repos/${{ github.repository }}/actions/workflows/gradle.yml/dispatches" -d '{"ref":"main","inputs":{"publish":"true"}}'

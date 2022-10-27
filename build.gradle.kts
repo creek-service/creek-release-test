@@ -218,24 +218,9 @@ tasks.coveralls {
 }
 
 scmVersion {
-    hooks {
-        // Requires https://github.com/allegro/axion-release-plugin/issues/500 to simplify:
-        pre("fileUpdate", mapOf(
-            "files" to allDocs(),
-            "pattern" to KotlinClosure2(
-                { v: String, _: pl.allegro.tech.build.axion.release.domain.hooks.HookContext -> "\\Q${v}\\E" }
-            ),
-            "replacement" to KotlinClosure2(
-                { v: String, _: pl.allegro.tech.build.axion.release.domain.hooks.HookContext -> v }
-            )
-        ))
-//        pre("commit",
-//            KotlinClosure2(
-//                { v: String, _: pl.allegro.tech.build.axion.release.domain.scm.ScmPosition -> "Release the version $v" }
-//            ))
-    }
     checks {
-        // Required until https://github.com/allegro/axion-release-plugin/issues/549 fixed:
+        // Required until https://github.com/allegro/axion-release-plugin/issues/549 fixed
+        // As there is a circular test-only dependency between creek-base and creek-test:
         snapshotDependencies.set(false)
     }
 }
