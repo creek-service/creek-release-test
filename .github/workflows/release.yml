@@ -28,7 +28,7 @@ jobs:
       - name: Build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./gradlew check verifyRelease
+        run: ./gradlew check
       - name: Push changes
         run: |
           git config --global user.name 'CreekBot'
@@ -81,3 +81,4 @@ jobs:
       - name: Update Creek Docs
         run: |
           echo Updating docs
+
