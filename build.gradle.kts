@@ -57,6 +57,7 @@ subprojects {
 
     extra.apply {
         set("creekVersion", "0.2.0-SNAPSHOT")
+        set("actualCreekVersion", "0.2.0-SNAPSHOT")
         set("spotBugsVersion", "4.6.0")         // https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-annotations
         set("kafkaVersion", "3.3.1")            // https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients
 
@@ -68,6 +69,8 @@ subprojects {
         set("hamcrestVersion", "2.2")           // https://mvnrepository.com/artifact/org.hamcrest/hamcrest-core
     }
 
+    val creekVersion = "0.2.0-SNAPSHOT"
+    val kafkaVersion : String by extra
     val guavaVersion : String by extra
     val log4jVersion : String by extra
     val junitVersion: String by extra
@@ -76,6 +79,9 @@ subprojects {
     val hamcrestVersion : String by extra
 
     dependencies {
+        testImplementation("org.creekservice:creek-test-hamcrest:$creekVersion")
+        testImplementation("org.creekservice:creek-test-util:$creekVersion")
+        testImplementation("org.creekservice:creek-test-conformity:$creekVersion")
         testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
         testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
         testImplementation("org.junit-pioneer:junit-pioneer:$junitPioneerVersion")
@@ -85,6 +91,15 @@ subprojects {
         testImplementation("org.apache.logging.log4j:log4j-core:$log4jVersion")
         testImplementation("org.apache.logging.log4j:log4j-slf4j2-impl:$log4jVersion")
         testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+    }
+
+    configurations.all {
+        resolutionStrategy.eachDependency {
+            if (requested.group == "org.apache.kafka") {
+                // Need a known Kafka version for module patching to work:
+                useVersion(kafkaVersion)
+            }
+        }
     }
 
     tasks.compileJava {
