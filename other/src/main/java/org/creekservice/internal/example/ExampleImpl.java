@@ -19,7 +19,15 @@ package org.creekservice.internal.example;
 
 import org.creekservice.api.example.Example;
 
+/**
+ * Example impl
+ */
 public final class ExampleImpl implements Example {
+
+    /**
+     * Example method
+     * @return {@code true}
+     */
     @Override
     public boolean getTrue() {
         return true;
