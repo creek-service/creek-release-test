@@ -19,6 +19,7 @@ jobs:
       - name: Update Creek dependencies
         run: |
           nextRelease=$( ./gradlew currentVersion -q -Prelease.quiet | sed  's:\(.*\)\(-SNAPSHOT\):\1:' )
+          echo "Setting Creek dependencies to v$nextRelease"
           find . -type f -name "build.gradle.kts" -print0 \
             | xargs -0 sed -i 's/\"creekVersion\"[[:blank:]]*,[[:blank:]]*\"[^"]*\"/\"creekVersion\", \"'$nextRelease'\"/'
           git diff
