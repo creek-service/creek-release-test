@@ -20,7 +20,8 @@ jobs:
         run: |
           nextRelease=$( ./gradlew currentVersion -q -Prelease.quiet | sed  's:\(.*\)\(-SNAPSHOT\):\1:' )
           find . -type f -name "build.gradle.kts" -print0 \
-            | xargs -0 sed -i 's/\"creekVersion\"[[:blank:]]*,[[:blank:]]*\"[^"]*\"/\"creekVersion\", \"'$nextRelease'\"/g'
+            | xargs -0 sed -i 's/\"creekVersion\"[[:blank:]]*,[[:blank:]]*\"[^"]*\"/\"creekVersion\", \"'$nextRelease'\"/'
+          git diff
       - name: Build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
