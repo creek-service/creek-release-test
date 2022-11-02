@@ -60,9 +60,6 @@ jobs:
           ./gradlew release \
             -Prelease.customUsername=${{ github.actor }} \
             -Prelease.customPassword=${{ github.token }}
-      - name: Set next version
-        if: github.event.inputs.part != 'Patch'
-        run: ./gradlew markNextVersion -Prelease.incrementer=increment${{ github.event.inputs.part }}
       - name: Trigger build of next version
         run: |
           curl -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${GITHUB_TOKEN}" "https://api.github.com/repos/${{ github.repository }}/actions/workflows/gradle.yml/dispatches" -d '{"ref":"main","inputs":{"publish":"true"}}'
