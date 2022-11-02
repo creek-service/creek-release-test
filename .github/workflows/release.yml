@@ -16,6 +16,8 @@ jobs:
           cache: gradle
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+      - name: Fetch all tags
+        run: git fetch --tags --unshallow
       - name: Update Creek dependencies
         run: |
           nextRelease=$( ./gradlew currentVersion -q -Prelease.quiet | sed  's:\(.*\)\(-SNAPSHOT\):\1:' )
