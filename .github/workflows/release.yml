@@ -31,12 +31,12 @@ jobs:
         run: ./gradlew check
       - name: Push changes
         run: |
-          git config --global user.name 'CreekBot'
-          git config --global user.email 'creekbot@users.noreply.github.com'
+          git config --global user.name 'Creek-Bot'
+          git config --global user.email '95620007+Creek-Bot@users.noreply.github.com'
           git commit -am "Pre-release: Update Creek dependencies"
           git push
 
-  release:
+  build-release:
     needs: pre-release
     runs-on: ubuntu-latest
     steps:
@@ -65,8 +65,22 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.TRIGGER_GITHUB_TOKEN }}
 
+  release-release:
+    needs: build-release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3.1.0
+      - name: Make release
+        uses: marvinpinto/action-automatic-releases@1.2.1
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          files: |
+            LICENSE
+
+
   post-release:
-    needs: release
+    needs: build-release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3.1.0
@@ -80,5 +94,4 @@ jobs:
         run: chmod +x gradlew
       - name: Update Creek Docs
         run: |
-          echo Updating docs
-
+          echo Updating docs  (To do)
