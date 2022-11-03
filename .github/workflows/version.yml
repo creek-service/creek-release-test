@@ -12,6 +12,7 @@ on:
 
 jobs:
   version:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3.1.0
@@ -30,5 +31,7 @@ jobs:
       - name: Increment version
         env:
           GITHUB_TOKEN: ${{ secrets.TRIGGER_GITHUB_TOKEN }}
-        run: ./gradlew markNextVersion -Prelease.incrementer=increment${{ github.event.inputs.part }}
+        run: |
+          # The following command will trigger the build.yml workflow as it pushes a alpha tag
+          ./gradlew markNextVersion -Prelease.incrementer=increment${{ github.event.inputs.part }}
 

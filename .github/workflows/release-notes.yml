@@ -2,16 +2,20 @@ name: Build Release Notes
 
 on:
   push:
-    tags: [ "*" ]
+    tags: [ "v*.*.*" ]
 
 jobs:
   build-release:
-    # if: startsWith(github.ref, 'refs/tags/')
+    if: startsWith(github.ref, 'refs/tags/') && !endsWith(github.ref, '-alpha')
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v3.1.0
-      - name: Hack
-        run: |
-          echo "github.ref: ${{ github.ref }}"
+      - name: Create GitHut Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          generate_release_notes: true
+
+# Todo: Merge into build.yml and drop this file.

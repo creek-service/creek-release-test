@@ -7,6 +7,7 @@ on: [workflow_dispatch]
 jobs:
   release:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v3.1.0
         with:
@@ -25,9 +26,6 @@ jobs:
         run: git fetch --tags --unshallow
       - name: Release
         run: |
+          # The following command will trigger the build.yml workflow as it pushes a release tag
           ./gradlew release 
-
-# \
-#-Prelease.customUsername=${{ github.actor }} \
-#-Prelease.customPassword=${{ secrets.TRIGGER_GITHUB_TOKEN }}
 
