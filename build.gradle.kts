@@ -290,10 +290,14 @@ nexusPublishing {
             stagingProfileId.set("89a20518f39cd")
 
             if (project.hasProperty("SONA_USERNAME")) {
+                logger.info("Using SONA_USERNAME project property")
                 username.set(project.property("SONA_USERNAME").toString())
+            } else {
+                logger.info("Not using SONA_USERNAME project property")
             }
 
             if (project.hasProperty("SONA_PASSWORD")) {
+                logger.info("Using SONA_PASSWORD project property")
                 password.set(project.property("SONA_PASSWORD").toString())
             }
         }
