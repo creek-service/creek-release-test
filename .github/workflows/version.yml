@@ -32,7 +32,9 @@ jobs:
         env:
           # Todo: required?
           GITHUB_TOKEN: ${{ secrets.TRIGGER_GITHUB_TOKEN }}
-        run: ./gradlew markNextVersion -Prelease.incrementer=increment${{ github.event.inputs.part }} \
-          -Prelease.customUsername=${{ github.actor }} \
-          -Prelease.customPassword=${{ secrets.TRIGGER_GITHUB_TOKEN }}
+        run: |
+          ./gradlew markNextVersion \
+            -Prelease.incrementer=increment${{ github.event.inputs.part }} \
+            -Prelease.customUsername=${{ github.actor }} \
+            -Prelease.customPassword=${{ secrets.TRIGGER_GITHUB_TOKEN }}
 
