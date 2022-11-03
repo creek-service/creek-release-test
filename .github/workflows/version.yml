@@ -47,7 +47,7 @@ jobs:
         uses: allegro-actions/next-version@v1
 
       - name: Push new tag on master
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/main'
         uses: allegro-actions/create-tag@v1
         env:
           GITHUB_TOKEN: ${{ secrets.TRIGGER_GITHUB_TOKEN }}
