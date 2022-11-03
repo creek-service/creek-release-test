@@ -1,0 +1,18 @@
+changelog:
+  exclude:
+    labels:
+      - release-prep
+      - documentation
+  categories:
+    - title: Breaking Changes 🛠
+      labels:
+        - breaking-change
+    - title: Exciting New Features 🎉
+      labels:
+        - enhancement
+    - title: Bug fixes 🎉
+      labels:
+        - bug
+    - title: Other Changes
+      labels:
+        - "*"
