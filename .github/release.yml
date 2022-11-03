@@ -3,6 +3,7 @@ changelog:
     labels:
       - release-prep
       - documentation
+      - subtask
   categories:
     - title: Breaking Changes 🛠
       labels: [ breaking-change ]
