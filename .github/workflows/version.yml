@@ -29,8 +29,6 @@ jobs:
       - name: Fetch all tags
         run: git fetch --tags --unshallow
       - name: Increment version
-        env:
-          GITHUB_TOKEN: ${{ secrets.TRIGGER_GITHUB_TOKEN }}
         run: |
           # The following command will trigger the build.yml workflow as it pushes a alpha tag
           ./gradlew markNextVersion -Prelease.incrementer=increment${{ github.event.inputs.part }}
