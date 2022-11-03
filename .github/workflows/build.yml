@@ -54,6 +54,7 @@ jobs:
 
   build-release:
     if: startsWith(github.ref, 'refs/tags/') && !endsWith(github.ref, '-alpha')
+    needs: build-code
     runs-on: ubuntu-latest
     permissions:
       contents: write
