@@ -24,13 +24,10 @@ jobs:
       - name: Fetch all tags
         run: git fetch --tags --unshallow
       - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.TRIGGER_GITHUB_TOKEN }}
         run: |
           ./gradlew release \
             -Prelease.customUsername=${{ github.actor }} \
             -Prelease.customPassword=${{ github.token }}
-      - name: Trigger build of new version
-        run: |
-          curl -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${GITHUB_TOKEN}" "https://api.github.com/repos/${{ github.repository }}/actions/workflows/gradle.yml/dispatches" -d '{"ref":"main","inputs":{"publish":"true"}}'
-        env:
-          GITHUB_TOKEN: ${{ secrets.TRIGGER_GITHUB_TOKEN }}
 
