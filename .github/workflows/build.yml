@@ -16,7 +16,7 @@ on:
         default: "true"
 
 jobs:
-  build-code:
+  build:
     runs-on: ubuntu-latest
     concurrency: "${{ github.repository }}-versioning"
     steps:
@@ -42,18 +42,12 @@ jobs:
           ORG_GRADLE_PROJECT_SONA_PASSWORD: ${{ secrets.SONA_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run:  |
-          # todo
-          echo starting
-          git tag
-          
-          echo fetching tags
-          git fetch --tag --unshallow
-          
-          echo publishing
+          git fetch --tag --unshallow -f
           ./gradlew publish closeSonatypeStagingRepository
 
   build-release:
     if: startsWith(github.ref, 'refs/tags/') && !endsWith(github.ref, '-alpha')
+    needs: build
     runs-on: ubuntu-latest
     permissions:
       contents: write
