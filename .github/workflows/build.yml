@@ -5,11 +5,8 @@ name: Build
 
 on:
   push:
-    branches: [ not-main ] # todo:
-#    tags:
-#      - v*
-      # - v*.*.*
-      # todo - !*-alpha
+    branches: [ main ]
+    tags: [ "v*.*.*" ]
   pull_request:
     branches: [ main ]
   workflow_dispatch:
@@ -17,8 +14,6 @@ on:
       publish_artifacts:
         description: "Publish release artifacts: true or false?"
         default: "true"
-  schedule:
-    - cron: '0 0 * * 0'
 
 jobs:
   build-code:
@@ -48,18 +43,14 @@ jobs:
           git fetch --tags --unshallow
           ./gradlew publish closeSonatypeStagingRepository
 
-  # Todo:
   build-release:
-    # if: startsWith(github.ref, 'refs/tags/')
+    if: startsWith(github.ref, 'refs/tags/') && !endsWith(github.ref, '-alpha')
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v3.1.0
-      - name: Hack
-        run: |
-          echo "github.ref: ${{ github.ref }}"
-      - name: Release
+      - name: Create GitHut Release
         uses: softprops/action-gh-release@v1
         with:
           generate_release_notes: true

@@ -1,8 +1,6 @@
 name: CodeQL
 
 on:
-  push:
-    branches: [ not-main ] # todo:
   pull_request:
     branches: [ main ]
 

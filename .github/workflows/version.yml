@@ -1,12 +1,12 @@
 # A Workflow for adjusting the version number of the next release
 
-name: Version
+name: Set next version
 
 on:
   workflow_dispatch:
     inputs:
       part:
-        description: "Part to increment: Major, Minor or Patch"
+        description: "Part to increment: Major, Minor, Patch or the next release, e.g. 1.2.3"
         required: true
         default: Minor
 
@@ -29,7 +29,13 @@ jobs:
       - name: Fetch all tags
         run: git fetch --tags --unshallow
       - name: Increment version
+        if: contains(fromJson('["Major", "Minor", "Patch"]'), github.event.inputs.part)
         run: |
           # The following command will trigger the build.yml workflow as it pushes a alpha tag
           ./gradlew markNextVersion -Prelease.incrementer=increment${{ github.event.inputs.part }}
+      - name: Set next version
+        if: !contains(fromJson('["Major", "Minor", "Patch"]'), github.event.inputs.part)
+        run: |
+          # The following command will trigger the build.yml workflow as it pushes a alpha tag
+          ./gradlew markNextVersion -Prelease.version=${{ github.event.inputs.part }}
 
