@@ -5,17 +5,13 @@ changelog:
       - documentation
   categories:
     - title: Breaking Changes 🛠
-      labels:
-        - breaking-change
+      labels: [ breaking-change ]
 
     - title: Exciting New Features 🎉
-      labels:
-        - enhancement
+      labels: [ enhancement ]
 
-    - title: Bug fixes 🎉
-      labels:
-        - bug
+    - title: Bug Fixes 🎉
+      labels: [ bug ]
 
-    - title: Other Changes
-      labels:
-        - "*"
+    - title: Less Exciting Things
+      labels: [ "*" ]
