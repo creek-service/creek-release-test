@@ -4,6 +4,8 @@ name: Release
 
 on: [workflow_dispatch]
 
+concurrency: "${{ github.repository }}-versioning"
+
 jobs:
   release:
     runs-on: ubuntu-latest
