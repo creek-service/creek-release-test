@@ -17,6 +17,7 @@ on:
 
 jobs:
   build:
+    name: build ${{ github.ref_name }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3.1.0
