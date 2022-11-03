@@ -18,7 +18,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    concurrency: "${{ github.repository }}-versioning"
     steps:
       - uses: actions/checkout@v3.1.0
       - name: Set up JDK 11
