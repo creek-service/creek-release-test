@@ -6,8 +6,8 @@ name: Build
 on:
   push:
     branches: [ not-main ] # todo:
-    tags:
-      - v*
+#    tags:
+#      - v*
       # - v*.*.*
       # todo - !*-alpha
   pull_request:
