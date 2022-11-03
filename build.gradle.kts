@@ -2,11 +2,13 @@ plugins {
     java
     jacoco
     `maven-publish`
+    signing
     id("com.github.spotbugs") version "5.0.13"                           // https://plugins.gradle.org/plugin/com.github.spotbugs
     id("com.diffplug.spotless") version "6.11.0"                         // https://plugins.gradle.org/plugin/com.diffplug.spotless
-    id("pl.allegro.tech.build.axion-release") version "1.14.2"          // https://plugins.gradle.org/plugin/pl.allegro.tech.build.axion-release
-    id("com.github.kt3k.coveralls") version "2.12.0"                    // https://plugins.gradle.org/plugin/com.github.kt3k.coveralls
-    id("org.javamodularity.moduleplugin") version "1.8.12" apply false  // https://plugins.gradle.org/plugin/org.javamodularity.moduleplugin
+    id("pl.allegro.tech.build.axion-release") version "1.14.2"           // https://plugins.gradle.org/plugin/pl.allegro.tech.build.axion-release
+    id("io.github.gradle-nexus.publish-plugin") version "1.1.0"          // https://plugins.gradle.org/plugin/io.github.gradle-nexus.publish-plugin
+    id("com.github.kt3k.coveralls") version "2.12.0"                     // https://plugins.gradle.org/plugin/com.github.kt3k.coveralls
+    id("org.javamodularity.moduleplugin") version "1.8.12" apply false   // https://plugins.gradle.org/plugin/org.javamodularity.moduleplugin
 }
 
 project.version = scmVersion.version
@@ -22,6 +24,7 @@ allprojects {
 
     java {
         withSourcesJar()
+        withJavadocJar()
 
         modularity.inferModulePath.set(false)
         sourceCompatibility = JavaVersion.VERSION_11
@@ -41,12 +44,13 @@ allprojects {
     }
 
     configurations.all {
-        resolutionStrategy.cacheChangingModulesFor(10, TimeUnit.MINUTES)
+        resolutionStrategy.cacheChangingModulesFor(15, TimeUnit.MINUTES)
     }
 }
 
 subprojects {
     apply(plugin = "maven-publish")
+    apply(plugin = "signing")
     apply(plugin = "org.javamodularity.moduleplugin")
 
     if (!name.startsWith("test-")) {
@@ -150,8 +154,12 @@ subprojects {
         dependsOn(tasks.test)
     }
 
-    tasks.jar {
-        archiveBaseName.set("${rootProject.name}-${project.name}")
+    tasks.javadoc {
+        if(JavaVersion.current().isJava9Compatible) {
+            (options as StandardJavadocDocletOptions).apply {
+                addBooleanOption("html5", true)
+            }
+        }
     }
 
     tasks.register("format") {
@@ -175,15 +183,51 @@ subprojects {
                 }
             }
             publications {
-                create<MavenPublication>("maven") {
+                create<MavenPublication>("mavenJava") {
                     from(components["java"])
                     artifactId = "${rootProject.name}-${project.name}"
 
                     pom {
-                        url.set("https://github.com/creek-service/${rootProject.name}.git")
+                        name.set("${project.group}:${artifactId}")
+
+                        description.set("A library used for the testing of the release process")
+
+                        url.set("https://www.creekservice.org")
+
+                        licenses {
+                            license {
+                                name.set("The Apache License, Version 2.0")
+                                url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+                            }
+                        }
+
+                        developers {
+                            developer {
+                                name.set("Andy Coates")
+                                email.set("8012398+big-andy-coates@users.noreply.github.com")
+                                organization.set("Creek-Service")
+                                organizationUrl.set("https://www.creekservice.org")
+                            }
+                        }
+
+                        scm {
+                            connection.set("scm:git:git://github.com/creek-service/${rootProject.name}.git")
+                            developerConnection.set("scm:git:ssh://github.com/creek-service/${rootProject.name}.git")
+                            url.set("http://github.com/creek-service/${rootProject.name}")
+                        }
                     }
                 }
             }
+        }
+
+        signing {
+            setRequired {
+                (!version.toString().endsWith("-SNAPSHOT")) && gradle.taskGraph.hasTask("publishToSonatype")
+            }
+            if (project.hasProperty("signingKey")) {
+                useInMemoryPgpKeys(properties["signingKey"].toString(), properties["signingPassword"].toString())
+            }
+            sign(publishing.publications["mavenJava"])
         }
     }
 }
@@ -232,14 +276,30 @@ scmVersion {
     checks {
         // Required until https://github.com/allegro/axion-release-plugin/issues/549 fixed
         // As there is a circular test-only dependency between creek-base and creek-test:
+        // Todo: while testing need these two:
         snapshotDependencies.set(false)
+        uncommittedChanges.set(false)
     }
 }
 
-fun allDocs(): List<String> {
-    return fileTree("${projectDir}").matching {
-        include("**/*.md")
-    }.map {it.absolutePath }
+nexusPublishing {
+    repositories {
+        sonatype {
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+            stagingProfileId.set("89a20518f39cd")
+
+            if (project.hasProperty("SONA_USERNAME")) {
+                username.set(project.property("SONA_USERNAME").toString())
+            }
+
+            if (project.hasProperty("SONA_PASSWORD")) {
+                password.set(project.property("SONA_PASSWORD").toString())
+            }
+        }
+    }
 }
 
 defaultTasks("format", "static", "check")
+
+// Todo: drop github packages use?

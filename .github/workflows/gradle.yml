@@ -39,6 +39,6 @@ jobs:
         if: github.event_name == 'push' || github.event.inputs.publish == 'true'
         run:  |
           git fetch --tags --unshallow
-          ./gradlew publish
+          ./gradlew publish closeSonatypeStagingRepository
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
