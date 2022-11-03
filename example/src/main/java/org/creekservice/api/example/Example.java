@@ -16,13 +16,12 @@
 
 package org.creekservice.api.example;
 
-/**
- * Example interface
- */
+/** Example interface */
 public interface Example {
 
     /**
      * Example method
+     *
      * @return something
      */
     boolean getTrue();

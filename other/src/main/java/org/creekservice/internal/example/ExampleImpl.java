@@ -19,13 +19,12 @@ package org.creekservice.internal.example;
 
 import org.creekservice.api.example.Example;
 
-/**
- * Example impl
- */
+/** Example impl */
 public final class ExampleImpl implements Example {
 
     /**
      * Example method
+     *
      * @return {@code true}
      */
     @Override
