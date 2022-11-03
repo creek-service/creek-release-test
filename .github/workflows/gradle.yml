@@ -13,15 +13,17 @@ on:
     branches: [ main ]
   workflow_dispatch:
     inputs:
-      publish:
-        description: "Publish: true or false?"
-        required: true
+      publish_artifacts:
+        description: "Publish release artifacts: true or false?"
+        default: "false"
+      create_release:
+        description: "Create release on Github : true or false?"
         default: "false"
   schedule:
     - cron: '0 0 * * 0'
 
 jobs:
-  build:
+  build-code:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3.1.0
@@ -43,7 +45,7 @@ jobs:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         run: ./gradlew check # coveralls
       - name: Publish
-        if: github.event_name == 'push' || github.event.inputs.publish == 'true'
+        if: github.event_name == 'push' || github.event.inputs.publish_artifacts == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGKEY }}
