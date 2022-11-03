@@ -47,7 +47,7 @@ jobs:
           git tag
           
           echo fetching tags
-          git fetch --tag --unshallow
+          git fetch --tag --unshallow -f
           
           echo publishing
           ./gradlew publish closeSonatypeStagingRepository
