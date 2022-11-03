@@ -19,7 +19,8 @@ package org.creekservice.internal.example;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-import org.creekservice.api.example.Example;
+import org.creekservice.api.example2.Example;
+import org.creekservice.internal.example2.ExampleImpl;
 import org.junit.jupiter.api.Test;
 
 class ExampleImplTest {

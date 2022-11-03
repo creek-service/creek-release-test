@@ -1,4 +1,4 @@
 /** Another example module */
 module creek.release.test.example {
-    exports org.creekservice.api.example;
+    exports org.creekservice.api.example2;
 }

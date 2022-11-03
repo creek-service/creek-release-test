@@ -14,15 +14,21 @@
  * limitations under the License.
  */
 
-package org.creekservice.api.example;
+package org.creekservice.internal.example2;
 
-/** Example type */
-public interface Example {
+
+import org.creekservice.api.example2.Example;
+
+/** Example impl */
+public final class ExampleImpl implements Example {
 
     /**
      * Example method
      *
-     * @return something
+     * @return {@code true}
      */
-    boolean getTrue();
+    @Override
+    public boolean getTrue() {
+        return true;
+    }
 }
