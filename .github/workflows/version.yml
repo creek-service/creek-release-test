@@ -31,5 +31,5 @@ jobs:
       - name: Increment version
         env:
           GITHUB_TOKEN: ${{ secrets.TRIGGER_GITHUB_TOKEN }}
-        run: ./gradlew markNextVersion -Prelease.incrementer=increment${{ github.event.inputs.part }}
+        run: ./gradlew -i markNextVersion -Prelease.incrementer=increment${{ github.event.inputs.part }}
 
