@@ -2,7 +2,7 @@ ame: Build Release Notes
 
 on:
   push:
-    tags: [ * ]
+    tags: [ "*" ]
 
 jobs:
   build-release:
