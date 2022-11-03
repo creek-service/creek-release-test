@@ -42,7 +42,14 @@ jobs:
           ORG_GRADLE_PROJECT_SONA_PASSWORD: ${{ secrets.SONA_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run:  |
-          git fetch --tags --unshallow
+          # todo
+          echo starting
+          git tag
+          
+          echo fetching tags
+          git fetch --tag --unshallow
+          
+          echo publishing
           ./gradlew publish closeSonatypeStagingRepository
 
   build-release:
