@@ -54,6 +54,8 @@ jobs:
         with:
           tag: ${{ steps.bump.outputs.next_tag }}
           current-tag: ${{ steps.bump.outputs.current_tag }}
+          user-name: Creek-bot
+          user-email: 95620007+Creek-Bot@users.noreply.github.com
 
 
 # todo: -Prelease.pushTagsOnly???
