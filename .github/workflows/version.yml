@@ -15,62 +15,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3.1.0
-        # Todo: required?
-        env:
+        with:
           token: ${{ secrets.TRIGGER_GITHUB_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.TRIGGER_GITHUB_TOKEN }}
-#      - name: Set up JDK 11
-#        uses: actions/setup-java@v3
-#        with:
-#          java-version: '11'
-#          distribution: 'adopt'
-#          cache: gradle
-#      - name: Grant execute permission for gradlew
-#        run: chmod +x gradlew
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+          cache: gradle
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
       - name: Fetch all tags
         run: git fetch --tags --unshallow
-#      - name: Increment version
-#        env:
-#          # Todo: required?
-#          GITHUB_TOKEN: ${{ secrets.TRIGGER_GITHUB_TOKEN }}
-#        run: |
-#          ./gradlew markNextVersion \
-#            -Prelease.incrementer=increment${{ github.event.inputs.part }} \
-#            -Prelease.customUsername=${{ github.actor }} \
-#            -Prelease.customPassword=${{ secrets.TRIGGER_GITHUB_TOKEN }}
-      # Todo: remove
-      - name: Hack
-        run: |
-          echo "github.ref: ${{ github.ref }}"
-          echo "github.actor: ${{ github.actor }}"
-      - name: get next version
-        id: 'bump'
-        uses: allegro-actions/next-version@v1
-
-#      - name: Push new tag on master
-#        if: github.ref == 'refs/heads/main'
-#        uses: allegro-actions/create-tag@v1
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.TRIGGER_GITHUB_TOKEN }}
-#        with:
-#          tag: ${{ steps.bump.outputs.next_tag }}
-#          current-tag: ${{ steps.bump.outputs.current_tag }}
-#          user-name: Creek-bot
-#          user-email: 95620007+Creek-Bot@users.noreply.github.com
-      - name: Push new tag on master
-        if: github.ref == 'refs/heads/main'
+      - name: Increment version
         env:
           GITHUB_TOKEN: ${{ secrets.TRIGGER_GITHUB_TOKEN }}
-          TAG: ${{ steps.bump.outputs.next_tag }}
-          CURRENT_RELEASE: ${{ steps.bump.outputs.current_tag }}
-        run: |
-          echo "CURRENT RELEASE $CURRENT_RELEASE"
-          echo "NEW TAG $TAG"
-          echo "CURRENT TAGS:"
-          git tag --points-at HEAD
-          git config user.name "Creek-bot"
-          git config user.email "95620007+Creek-Bot@users.noreply.github.com"
-          git tag -am "$TAG" $TAG
-          git push --tags "https://$GITHUB_ACTOR:${{ secrets.TRIGGER_GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY.git"
+        run: ./gradlew markNextVersion -Prelease.incrementer=increment${{ github.event.inputs.part }}
 
-# todo: -Prelease.pushTagsOnly???
