@@ -37,6 +37,11 @@ jobs:
 #            -Prelease.incrementer=increment${{ github.event.inputs.part }} \
 #            -Prelease.customUsername=${{ github.actor }} \
 #            -Prelease.customPassword=${{ secrets.TRIGGER_GITHUB_TOKEN }}
+      # Todo: remove
+      - name: Hack
+        run: |
+          echo "github.ref: ${{ github.ref }}"
+          echo "github.actor: ${{ github.actor }}"
       - name: get next version
         id: 'bump'
         uses: allegro-actions/next-version@v1
