@@ -30,6 +30,10 @@ jobs:
         run: git fetch --tags --unshallow
       - name: Increment version
         env:
+          # Todo: required?
           GITHUB_TOKEN: ${{ secrets.TRIGGER_GITHUB_TOKEN }}
-        run: ./gradlew -i markNextVersion -Prelease.incrementer=increment${{ github.event.inputs.part }}
+        run: ./gradlew -i markNextVersion \
+          -Prelease.incrementer=increment${{ github.event.inputs.part }} \
+          -Prelease.customUsername=${{ github.actor }} \
+          -Prelease.customPassword=${{ secrets.TRIGGER_GITHUB_TOKEN }}
 
