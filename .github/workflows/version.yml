@@ -1,3 +1,5 @@
+# A Workflow for adjusting the version number of the next release
+
 name: Version
 
 on:
@@ -23,7 +25,7 @@ jobs:
         run: chmod +x gradlew
       - name: Fetch all tags
         run: git fetch --tags --unshallow
-      - name: Bump version
+      - name: Increment version
         run: ./gradlew markNextVersion -Prelease.incrementer=increment${{ github.event.inputs.part }}
       - name: Trigger Build
         run: |

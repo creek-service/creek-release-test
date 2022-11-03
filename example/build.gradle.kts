@@ -2,6 +2,8 @@ plugins {
     `java-library`
 }
 
+extra.set("pomDescription", "Example library used for release testing")
+
 val creekVersion = "0.2.0-SNAPSHOT"
 val kafkaVersion : String by extra
 
