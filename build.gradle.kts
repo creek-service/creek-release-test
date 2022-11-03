@@ -200,14 +200,10 @@ tasks.coveralls {
 
 scmVersion {
     checks {
-        // Required until https://github.com/allegro/axion-release-plugin/issues/549 fixed
-        // As there is a circular test-only dependency between creek-base and creek-test:
-        // Todo: while testing need these two:
-        snapshotDependencies.set(false)
-        uncommittedChanges.set(false)
+        // Can be useful to uncomment these two if testing locally
+        // snapshotDependencies.set(false)
+        // uncommittedChanges.set(false)
     }
 }
 
 defaultTasks("format", "static", "check")
-
-// Todo: drop github packages use?
