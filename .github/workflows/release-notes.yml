@@ -1,4 +1,4 @@
-ame: Build Release Notes
+name: Build Release Notes
 
 on:
   push:
