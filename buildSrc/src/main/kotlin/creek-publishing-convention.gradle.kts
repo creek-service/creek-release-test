@@ -16,6 +16,8 @@ tasks.javadoc {
     if (JavaVersion.current().isJava9Compatible) {
         (options as StandardJavadocDocletOptions).apply {
             addBooleanOption("html5", true)
+            // -quite? See: https://github.com/gradle/gradle/issues/2354
+            addStringOption("Xwerror", "-quiet")
         }
     }
 }
@@ -40,15 +42,7 @@ publishing {
             pom {
                 name.set("${project.group}:${artifactId}")
 
-                /**
-                 * Set in project's build.gradle.kts with:
-                 *
-                 * extra.set("pomDescription", "Some description...")
-                 */
-                val pomDescription: Provider<String> = providers.provider {
-                    project.extra.get("pomDescription").toString()
-                }
-                description.set(pomDescription)
+                description.set("${rootProject.name.capitalize()} ${project.name.capitalize()} library")
 
                 url.set("https://www.creekservice.org")
 
