@@ -7,7 +7,8 @@
 
 Hack space for release testing
 
-Current version: 0.1.3
+
+Current version: 0.5.12
 
 ### Gradle commands
 
