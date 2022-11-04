@@ -200,8 +200,9 @@ tasks.coveralls {
 
 scmVersion {
     checks {
-        // Can be useful to uncomment these two if testing locally
-        // snapshotDependencies.set(false)
+        // Allow project to rely on Creek snapshots for now:
+        snapshotDependencies.set(false)
+        // Can be useful to uncomment the following
         // uncommittedChanges.set(false)
     }
 }
