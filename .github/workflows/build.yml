@@ -32,6 +32,11 @@ jobs:
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         run: ./gradlew check coveralls
+      - name: Fetch tags
+        # Do NOT want to fetch all tags if build specific tag.
+        # Doing so could result in code published with wrong version, if newer tags have been pushed
+        if: !startsWith(github.ref, 'refs/tags/')
+        run: git fetch --tag --unshallow
       - name: Publish
         if: github.event_name == 'push' || github.event.inputs.publish_artifacts == 'true'
         env:
@@ -40,9 +45,7 @@ jobs:
           ORG_GRADLE_PROJECT_SONA_USERNAME: ${{ secrets.SONA_USERNAME }}
           ORG_GRADLE_PROJECT_SONA_PASSWORD: ${{ secrets.SONA_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run:  |
-          git fetch --tag --unshallow -f
-          ./gradlew publish closeSonatypeStagingRepository # todo: switch to releasing once happy.
+        run: ./gradlew publish closeSonatypeStagingRepository # todo: switch to releasing once happy.
 
   build-release:
     if: startsWith(github.ref, 'refs/tags/') && !endsWith(github.ref, '-alpha')
