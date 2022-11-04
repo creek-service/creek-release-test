@@ -1,53 +1,19 @@
 plugins {
     java
     jacoco
+    `creek-common-convention` apply false
+    `creek-coverage-convention`
     `creek-publishing-convention` apply false
     `creek-sonatype-publishing-convention`
-    id("com.github.spotbugs") version "5.0.13"                           // https://plugins.gradle.org/plugin/com.github.spotbugs
-    id("com.diffplug.spotless") version "6.11.0"                         // https://plugins.gradle.org/plugin/com.diffplug.spotless
     id("pl.allegro.tech.build.axion-release") version "1.14.2"           // https://plugins.gradle.org/plugin/pl.allegro.tech.build.axion-release
-    id("com.github.kt3k.coveralls") version "2.12.0"                     // https://plugins.gradle.org/plugin/com.github.kt3k.coveralls
-    id("org.javamodularity.moduleplugin") version "1.8.12" apply false   // https://plugins.gradle.org/plugin/org.javamodularity.moduleplugin
 }
 
 project.version = scmVersion.version
 
-allprojects {
-    apply(plugin = "idea")
-    apply(plugin = "java")
-    apply(plugin = "checkstyle")
-    apply(plugin = "com.diffplug.spotless")
-    apply(plugin = "com.github.spotbugs")
-
-    group = "org.creekservice"
-
-    java {
-        modularity.inferModulePath.set(false)
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-
-    repositories {
-        mavenCentral()
-
-        maven {
-            url = uri("https://maven.pkg.github.com/creek-service/*")
-            credentials {
-                username = "Creek-Bot-Token"
-                password = "\u0067hp_LtyvXrQZen3WlKenUhv21Mg6NG38jn0AO2YH"
-            }
-        }
-    }
-
-    configurations.all {
-        resolutionStrategy.cacheChangingModulesFor(15, TimeUnit.MINUTES)
-    }
-}
-
 subprojects {
     project.version = project.parent?.version!!
 
-    apply(plugin = "org.javamodularity.moduleplugin")
+    apply(plugin = "creek-common-convention")
 
     if (!name.startsWith("test-")) {
         apply(plugin = "creek-publishing-convention")
@@ -56,7 +22,6 @@ subprojects {
 
     extra.apply {
         set("creekVersion", "0.2.0-SNAPSHOT")
-        set("actualCreekVersion", "0.2.0-SNAPSHOT")
         set("spotBugsVersion", "4.6.0")         // https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-annotations
         set("kafkaVersion", "3.3.1")            // https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients
 
@@ -68,7 +33,7 @@ subprojects {
         set("hamcrestVersion", "2.2")           // https://mvnrepository.com/artifact/org.hamcrest/hamcrest-core
     }
 
-    val creekVersion = "0.2.0-SNAPSHOT"
+    val creekVersion : String by extra
     val kafkaVersion : String by extra
     val guavaVersion : String by extra
     val log4jVersion : String by extra
@@ -100,102 +65,6 @@ subprojects {
             }
         }
     }
-
-    tasks.compileJava {
-        options.compilerArgs.add("-Xlint:all,-serial,-requires-automatic,-requires-transitive-automatic")
-        options.compilerArgs.add("-Werror")
-    }
-
-    tasks.test {
-        useJUnitPlatform()
-        setForkEvery(1)
-        maxParallelForks = 4
-        testLogging {
-            showStandardStreams = true
-            exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
-            showCauses = true
-            showExceptions = true
-            showStackTraces = true
-        }
-    }
-
-    spotless {
-        java {
-            googleJavaFormat("1.12.0").aosp()
-            indentWithSpaces()
-            importOrder()
-            removeUnusedImports()
-            trimTrailingWhitespace()
-            endWithNewline()
-        }
-    }
-
-    spotbugs {
-        tasks.spotbugsMain {
-            reports.create("html") {
-                required.set(true)
-                setStylesheet("fancy-hist.xsl")
-            }
-        }
-        tasks.spotbugsTest {
-            reports.create("html") {
-                required.set(true)
-                setStylesheet("fancy-hist.xsl")
-            }
-        }
-    }
-
-    tasks.withType<JacocoReport>().configureEach{
-        dependsOn(tasks.test)
-    }
-
-    tasks.register("format") {
-        dependsOn("spotlessCheck", "spotlessApply")
-    }
-
-    tasks.register("static") {
-        dependsOn("checkstyleMain", "checkstyleTest", "spotbugsMain", "spotbugsTest")
-    }
-}
-
-val coverage = tasks.register<JacocoReport>("coverage") {
-    group = "coverage"
-    description = "Generates an aggregate code coverage report from all subprojects"
-
-    val coverageReportTask = this
-
-    // If a subproject applies the 'jacoco' plugin, add the result it to the report
-    subprojects {
-        val subproject = this
-        subproject.plugins.withType<JacocoPlugin>().configureEach {
-            subproject.tasks.matching({ it.extensions.findByType<JacocoTaskExtension>() != null }).configureEach {
-                sourceSets(subproject.sourceSets.main.get())
-                executionData(files(subproject.tasks.withType<Test>()).filter { it.exists() && it.name.endsWith(".exec") })
-            }
-
-            subproject.tasks.matching({ it.extensions.findByType<JacocoTaskExtension>() != null }).forEach {
-                coverageReportTask.dependsOn(it)
-            }
-        }
-    }
-
-    reports {
-        xml.required.set(true)
-        html.required.set(true)
-    }
-}
-
-coveralls {
-    sourceDirs = subprojects.flatMap{it.sourceSets.main.get().allSource.srcDirs}.map{it.toString()}
-    jacocoReportPath = "$buildDir/reports/jacoco/coverage/coverage.xml"
-}
-
-tasks.coveralls {
-    group = "coverage"
-    description = "Uploads the aggregated coverage report to Coveralls"
-
-    dependsOn(coverage)
-    onlyIf{System.getenv("CI") != null}
 }
 
 scmVersion {
@@ -206,5 +75,3 @@ scmVersion {
         // uncommittedChanges.set(false)
     }
 }
-
-defaultTasks("format", "static", "check")
