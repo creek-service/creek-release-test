@@ -17,6 +17,8 @@
 /**
  * Standard configuration of Creek projects
  *
+ * <p>Version: 1.1
+ *
  * <p>Apply to all java modules, usually excluding the root project in multi-module sets.
  */
 
