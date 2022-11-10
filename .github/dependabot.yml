@@ -5,11 +5,9 @@
 
 version: 2
 registries:
-  creek-github-packages:
+  maven-snapshots:
     type: maven-repository
-    url: https://maven.pkg.github.com/creek-service/*
-    username: "Creek-Bot-Token"
-    password: "\u0067hp_LtyvXrQZen3WlKenUhv21Mg6NG38jn0AO2YH"
+    url: https://s01.oss.sonatype.org/content/repositories/snapshots/
 updates:
   - package-ecosystem: github-actions
     directory: /
@@ -18,6 +16,6 @@ updates:
   - package-ecosystem: gradle
     directory: /
     registries:
-      - creek-github-packages
+      - maven-snapshots
     schedule:
       interval: monthly
