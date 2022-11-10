@@ -25,9 +25,7 @@ subprojects {
     }
 
     extra.apply {
-        set("creekVersion", "0.2.0-SNAPSHOT")
-        set("spotBugsVersion", "4.6.0")         // https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-annotations
-        set("kafkaVersion", "3.3.1")            // https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients
+        set("creekVersion", "0.2.1-SNAPSHOT")
 
         set("log4jVersion", "2.19.0")           // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
         set("guavaVersion", "31.1-jre")         // https://mvnrepository.com/artifact/com.google.guava/guava
@@ -38,7 +36,6 @@ subprojects {
     }
 
     val creekVersion : String by extra
-    val kafkaVersion : String by extra
     val guavaVersion : String by extra
     val log4jVersion : String by extra
     val junitVersion: String by extra
@@ -59,15 +56,6 @@ subprojects {
         testImplementation("org.apache.logging.log4j:log4j-core:$log4jVersion")
         testImplementation("org.apache.logging.log4j:log4j-slf4j2-impl:$log4jVersion")
         testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
-    }
-
-    configurations.all {
-        resolutionStrategy.eachDependency {
-            if (requested.group == "org.apache.kafka") {
-                // Need a known Kafka version for module patching to work:
-                useVersion(kafkaVersion)
-            }
-        }
     }
 }
 

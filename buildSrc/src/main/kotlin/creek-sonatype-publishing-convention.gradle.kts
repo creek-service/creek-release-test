@@ -19,7 +19,9 @@
  *
  * <p>Version: 1.1
  *
- * Apply this plugin only to the root project if in multi-module setup.
+ * <p>Apply this plugin only to the root project if in multi-module setup.
+ *
+ * @see <a href="https://s01.oss.sonatype.org/">OSSHR Nexus Service</a>
  */
 
 plugins {
