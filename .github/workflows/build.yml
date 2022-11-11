@@ -47,7 +47,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           ./gradlew cV
-          ./gradlew publish closeSonatypeStagingRepository # todo: switch to releasing once happy.
+          ./gradlew publish closeSonatypeStagingRepository # note: release promotion disabled as this is just a release test env.
       - name: Publish to Gradle Plugins Portal
         if: startsWith(github.ref, 'refs/tags/') && !endsWith(github.ref, '-alpha')
         env:

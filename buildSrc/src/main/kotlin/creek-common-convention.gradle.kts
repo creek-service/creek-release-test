@@ -37,8 +37,24 @@ java {
 }
 
 repositories {
+    mavenCentral()
+
+    // Primary snapshot repo:
     maven {
         url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+        mavenContent {
+            includeGroup("org.creekservice")
+            snapshotsOnly()
+        }
+    }
+
+    // Backup snapshot repo:
+    maven {
+        url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+        mavenContent {
+            includeGroup("org.creekservice")
+            snapshotsOnly()
+        }
         mavenContent {
             includeGroup("org.creekservice")
             snapshotsOnly()
