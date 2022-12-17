@@ -4,6 +4,8 @@ name: Release
 
 on: [workflow_dispatch]
 
+permissions: read-all
+
 concurrency: "${{ github.repository }}-versioning"
 
 jobs:
