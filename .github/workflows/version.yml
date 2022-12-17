@@ -10,7 +10,8 @@ on:
         required: true
         default: Minor
 
-permissions: read-all
+permissions:
+  contents: read
 
 concurrency: "${{ github.repository }}-versioning"
 
