@@ -2,6 +2,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/creek-service/creek-release-test/badge.svg?branch=main)](https://coveralls.io/github/creek-service/creek-release-test?branch=main)
 [![build](https://github.com/creek-service/creek-release-test/actions/workflows/build.yml/badge.svg)](https://github.com/creek-service/creek-release-test/actions/workflows/build.yml)
 [![CodeQL](https://github.com/creek-service/creek-release-test/actions/workflows/codeql.yml/badge.svg)](https://github.com/creek-service/creek-release-test/actions/workflows/codeql.yml)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/creek-service/creek-release-test/badge)](https://api.securityscorecards.dev/projects/github.com/creek-service/creek-release-test)
 
 # Creek release test
 
