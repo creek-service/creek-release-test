@@ -1,0 +1,65 @@
+name: GitHub Pages
+
+on:
+  push:
+    branches: [ main]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+
+# Allow one concurrent deployment
+concurrency:
+  group: "${{ github.repository }}-pages"
+
+jobs:
+  build_pages:
+    if: ${{ github.run_number != 1 }}
+    runs-on: ubuntu-latest
+    env:
+      BUNDLE_GEMFILE: ${{ github.workspace }}/docs/Gemfile
+    steps:
+      - name: Checkout
+        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@ee2113536afb7f793eed4ce60e8d3b26db912da4 # v1.127.0
+        with:
+          ruby-version: '3.1'
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+          cache-version: 0 # Increment this number if you need to re-download cached gems
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@c5a3e1159e0cbdf0845eb8811bd39e39fc3099c2 # v2.1.3
+      - name: Build with Jekyll
+        # Outputs to the './docs/_site' directory by default
+        run: (cd docs && bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}")
+        env:
+          JEKYLL_ENV: production
+      - name: Upload artifact
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        # Automatically uploads an artifact from the './_site' directory by default
+        uses: actions/upload-pages-artifact@253fd476ed429e83b7aae64a92a75b4ceb1a17cf # v1.0.7
+        with:
+          path: "docs/_site/"
+
+  # Deployment job
+  deploy_pages:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    needs: build_pages
+
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@20a4baa1095bad40ba7d6ca0d9abbc220b76603f # v1.2.3
