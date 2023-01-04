@@ -16,7 +16,6 @@
 
 package org.creekservice.internal.example2;
 
-
 import org.creekservice.api.example2.Example;
 
 /** Example impl */
