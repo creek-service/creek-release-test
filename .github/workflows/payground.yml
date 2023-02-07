@@ -1,0 +1,34 @@
+# A Workflow for messing around in.
+
+name: Playgroup
+run-name: PlayGroup (${{ steps.currentVersion.outputs.CREEK_VERSION }})
+
+on: [workflow_dispatch]
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+      - name: Fetch version history
+        run: git fetch --tags --unshallow
+      - name: Set up JDK
+        uses: actions/setup-java@1df8dbefe2a8cbc99770194893dd902763bee34b # v3.9.0
+        with:
+          java-version: '16'
+          distribution: 'adopt'
+          cache: gradle
+      - name: Store current version in output
+        id: currentVersion
+        run: |
+            echo "CREEK_VERSION=$(./gradlew cV -q -Prelease.quiet)" >> $GITHUB_OUTPUT
+            echo "CREEK_OTHER=Thing" >> $GITHUB_OUTPUT
+            echo "Some summary data" >> $GITHUB_STEP_SUMMARY
+
+      - name: Echo version
+        run: echo "CREEK_VERSION ${{ steps.currentVersion.outputs.CREEK_VERSION }} - o${{ steps.currentVersion.outputs.CREEK_OTHER }}"
+
