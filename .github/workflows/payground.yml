@@ -1,7 +1,7 @@
 # A Workflow for messing around in.
 
 name: Playgroup
-run-name: PlayGroup (${{ steps.currentVersion.outputs.CREEK_VERSION }})
+#run-name: PlayGroup (${{ steps.currentVersion.outputs.CREEK_VERSION }})
 
 on: [workflow_dispatch]
 
