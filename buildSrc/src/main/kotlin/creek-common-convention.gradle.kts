@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Creek Contributors (https://github.com/creek-service)
+ * Copyright 2022-2023 Creek Contributors (https://github.com/creek-service)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,12 @@
 /**
  * Standard configuration of Creek projects
  *
- * <p>Version: 1.1
- *
  * <p>Apply to all java modules, usually excluding the root project in multi-module sets.
+ *
+ * <p>Version: 1.5
+ *  - 1.5: Add filters to exclude generated sources
+ *  - 1.4: Add findsecbugs-plugin
+ *  - 1.3: Fail on warnings for test code too.
  */
 
 plugins {
@@ -50,10 +53,10 @@ repositories {
 
     // Backup snapshot repo:
     maven {
-        url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-        mavenContent {
-            includeGroup("org.creekservice")
-            snapshotsOnly()
+        url = uri("https://maven.pkg.github.com/creek-service/*")
+        credentials {
+            username = System.getenv("GITHUB_ACTOR")
+            password = System.getenv("GITHUB_TOKEN")
         }
         mavenContent {
             includeGroup("org.creekservice")
@@ -64,12 +67,16 @@ repositories {
     mavenCentral()
 }
 
+dependencies {
+    spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:1.12.0")
+}
+
 configurations.all {
     // Reduce chance of build servers running into compilation issues due to stale snapshots:
     resolutionStrategy.cacheChangingModulesFor(15, TimeUnit.MINUTES)
 }
 
-tasks.compileJava {
+tasks.withType<JavaCompile> {
     options.compilerArgs.add("-Xlint:all,-serial,-requires-automatic,-requires-transitive-automatic,-module")
     options.compilerArgs.add("-Werror")
 }
@@ -89,17 +96,20 @@ tasks.test {
 
 spotless {
     java {
-        googleJavaFormat("1.15.0").aosp()
+        googleJavaFormat("1.15.0").aosp().reflowLongStrings()
         indentWithSpaces()
         importOrder()
         removeUnusedImports()
         trimTrailingWhitespace()
         endWithNewline()
         toggleOffOn("formatting:off", "formatting:on")
+        targetExclude("**/build/generated/source*/**/*.*")
     }
 }
 
 spotbugs {
+    excludeFilter.set(rootProject.file("config/spotbugs/suppressions.xml"))
+
     tasks.spotbugsMain {
         reports.create("html") {
             required.set(true)
