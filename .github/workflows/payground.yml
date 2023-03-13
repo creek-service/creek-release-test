@@ -1,34 +1,32 @@
 # A Workflow for messing around in.
 
 name: Playgroup
-#run-name: PlayGroup (${{ steps.currentVersion.outputs.CREEK_VERSION }})
-
-on: [workflow_dispatch]
+on:
+  pull_request:
+    branches:
+      - main
 
 permissions:
-  contents: read
+  contents: write
+  pull-requests: write
 
 jobs:
-  release:
+  dependabot:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: ${{ github.actor == 'dependabot[bot]' }}
     steps:
-      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
-      - name: Fetch version history
-        run: git fetch --tags --unshallow
-      - name: Set up JDK
-        uses: actions/setup-java@3f07048e3d294f56e9b90ac5ea2c6f74e9ad0f98 # v3.10.0
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v1
         with:
-          java-version: '16'
-          distribution: 'adopt'
-          cache: gradle
-      - name: Store current version in output
-        id: currentVersion
-        run: |
-            echo "CREEK_VERSION=$(./gradlew cV -q -Prelease.quiet)" >> $GITHUB_OUTPUT
-            echo "CREEK_OTHER=Thing" >> $GITHUB_OUTPUT
-            echo "Some summary data" >> $GITHUB_STEP_SUMMARY
-
-      - name: Echo version
-        run: echo "CREEK_VERSION ${{ steps.currentVersion.outputs.CREEK_VERSION }} - o${{ steps.currentVersion.outputs.CREEK_OTHER }}"
-
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Approve PR
+        run: gh pr review --approve "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - name: Enable auto-merge for Dependabot PRs
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
