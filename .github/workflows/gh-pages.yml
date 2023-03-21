@@ -11,9 +11,9 @@ on:
 permissions:
   contents: read
 
-# Allow one concurrent deployment
+# Allow one concurrent deployment, per branch
 concurrency:
-  group: "${{ github.repository }}-pages"
+  group: "${{ github.workflow }}-${{ github.ref }}"
 
 jobs:
   build_pages:
