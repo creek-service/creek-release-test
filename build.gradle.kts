@@ -47,7 +47,7 @@ subprojects {
     }
 
     extra.apply {
-        set("creekVersion", "0.3.3-SNAPSHOT")
+        set("creekVersion", "0.4.1-SNAPSHOT")
 
         set("log4jVersion", "2.20.0")           // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
         set("guavaVersion", "31.1-jre")         // https://mvnrepository.com/artifact/com.google.guava/guava
