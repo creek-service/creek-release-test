@@ -17,11 +17,14 @@
 /**
  * Configuration for Creek Gradle plugin publishing.
  *
- * <p>Version: 1.2
+ * <p>Version: 1.5
+ *  - 1.5: Switch to using `gradlePlugin`, as required by Gradle 8.0
+ *  - 1.4: Fix website URL to avoid redirect
+ *  - 1.3: Switch to setting 'system' from issue-management
  *
  * <p>Apply this plugin to any module publishing a Gradle plugin.
  *
- * <p>Do NOT ally the `creek-publishing-convention`.
+ * <p>Do NOT apply the `creek-publishing-convention`.
  */
 
 plugins {
@@ -39,11 +42,9 @@ java {
 
 val prependRootName = rootProject.name != project.name
 
-pluginBundle {
-    website = "https://www.creekservice.org/${rootProject.name}/"
-    vcsUrl = "https://github.com/creek-service/${rootProject.name}"
-
-    tags = listOf("creek", "creekservice", "microservice", "docker", "containers")
+gradlePlugin {
+    website.set("https://www.creekservice.org/${rootProject.name}/")
+    vcsUrl.set("https://github.com/creek-service/${rootProject.name}")
 }
 
 if (prependRootName) {
@@ -115,7 +116,7 @@ publishing {
             }
 
             issueManagement {
-                name.set("GitHub issues")
+                system.set("GitHub issues")
                 url.set("https://github.com/creek-service/${rootProject.name}/issues")
             }
 
