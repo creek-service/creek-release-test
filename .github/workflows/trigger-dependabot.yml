@@ -18,6 +18,7 @@ on:
         type: boolean
         required: false
         default: 'false'
+
 permissions:
   contents: read
 
@@ -34,14 +35,8 @@ jobs:
           cat -s .github/dependabot.yml > tmp.yml
           mv -f tmp.yml .github/dependabot.yml
           echo "" >> .github/dependabot.yml
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-      - name: Dump job context
-        env:
-          JOB_CONTEXT: ${{ toJson(job) }}
-        run: echo "$JOB_CONTEXT"
+      - name: Dump Inputs
+        run: echo "'${{ github.event.inputs.use-pr }}'"
       - name: Configure Git
         run: |
           git config --global user.email "95620007+Creek-Bot@users.noreply.github.com"
