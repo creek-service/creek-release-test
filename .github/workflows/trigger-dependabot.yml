@@ -65,3 +65,4 @@ jobs:
         run: git push
 
 # todo: in add-service, build the code unless using a PAT.
+# todo: can merge PRs if PAT is admin.... urgmmm.
