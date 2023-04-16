@@ -55,13 +55,8 @@ jobs:
         run: git push --set-upstream origin "create-trigger-dependabot-${{ github.run_number }}"
       - name: Create pull request
         if: ${{ github.event.inputs.use-pr == 'true' }}
-        run: gh pr create --title 'Trigger dependabot' --body 'PR created by the ${{ github.workflow }} workflow' --label 'chore'
-        env:
-          # Todo: comment about using PAT and link to docs.
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Merge pull request
-        if: ${{ github.event.inputs.use-pr == 'true' }}
-        run: gh pr merge --squash --admin --delete-branch
+        run: |
+          echo "Release version: $(gh pr create --title 'Trigger dependabot' --body 'PR created by the [${{ github.workflow }}](${{ github.event.workflow }}) workflow' --label 'chore')" >> $GITHUB_STEP_SUMMARY
         env:
           # Todo: comment about using PAT and link to docs.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
