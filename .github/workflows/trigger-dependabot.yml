@@ -17,7 +17,7 @@ on:
            See https://cli.github.com/manual/gh_pr_create)
         type: boolean
         required: false
-        default: false
+        default: 'false'
 permissions:
   contents: read
 
@@ -60,7 +60,13 @@ jobs:
         run: git push --set-upstream origin "create-trigger-dependabot-${{ github.run_number }}"
       - name: Create pull request
         if: ${{ github.event.inputs.use-pr }}
-        run: gh pr create --title 'Trigger dependabot' --body 'PR created by the trigger-dependabot.yml workflow' --label 'chore'
+        run: gh pr create --title 'Trigger dependabot' --body 'PR created by the ${{ github.workflow }} workflow' --label 'chore'
+        env:
+          # Todo: comment about using PAT and link to docs.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Review pull request
+        if: ${{ github.event.inputs.use-pr }}
+        run: gh pr review --approve
         env:
           # Todo: comment about using PAT and link to docs.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
