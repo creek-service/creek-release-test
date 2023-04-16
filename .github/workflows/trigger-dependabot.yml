@@ -60,7 +60,7 @@ jobs:
           # Todo: comment about using PAT and link to docs.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Push to main
-        if: !${{ github.event.inputs.use-pr }}
+        if: ${{ !github.event.inputs.use-pr }}
         run: git push --set-upstream origin "create-trigger-dependabot-${{ github.run_number }}"
 
 # todo: in add-service, build the code unless using a PAT.
