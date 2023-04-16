@@ -42,7 +42,7 @@ jobs:
           git config --global user.email "95620007+Creek-Bot@users.noreply.github.com"
           git config --global user.name "Creek Bot"
       - name: Create branch
-        if: ${{ github.event.inputs.use-pr }}
+        if: ${{ github.event.inputs.use-pr == 'true' }}
         run: |
           git checkout -b "create-trigger-dependabot-${{ github.run_number }}"
       - name: Add files
@@ -51,28 +51,22 @@ jobs:
           git add -A
           git commit -m "Trigger dependabot"
       - name: Push to PR branch
-        if: ${{ github.event.inputs.use-pr }}
+        if: ${{ github.event.inputs.use-pr == 'true' }}
         run: git push --set-upstream origin "create-trigger-dependabot-${{ github.run_number }}"
       - name: Create pull request
-        if: ${{ github.event.inputs.use-pr }}
+        if: ${{ github.event.inputs.use-pr == 'true' }}
         run: gh pr create --title 'Trigger dependabot' --body 'PR created by the ${{ github.workflow }} workflow' --label 'chore'
         env:
           # Todo: comment about using PAT and link to docs.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Review pull request
-        if: ${{ github.event.inputs.use-pr }}
-        run: gh pr review --approve
-        env:
-          # Todo: comment about using PAT and link to docs.
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Merge pull request
-        if: ${{ github.event.inputs.use-pr }}
+        if: ${{ github.event.inputs.use-pr == 'true' }}
         run: gh pr merge --squash --admin --delete-branch
         env:
           # Todo: comment about using PAT and link to docs.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Push to main
-        if: ${{ ! github.event.inputs.use-pr }}
+        if: ${{ github.event.inputs.use-pr != 'true' }}
         run: git push --set-upstream origin "create-trigger-dependabot-${{ github.run_number }}"
 
 # todo: in add-service, build the code unless using a PAT.
