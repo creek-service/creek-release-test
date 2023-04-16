@@ -15,7 +15,9 @@ on:
            Raise a PR, rather than commit directly. 
            PRs are compatible with branch protection, but require a PAT to run checks. 
            See https://cli.github.com/manual/gh_pr_create
+        type: boolean
         required: false
+        default: false
 permissions:
   contents: read
 
@@ -50,17 +52,19 @@ jobs:
         if: ${{ github.event.inputs.use-pr }}
         run: git push --set-upstream origin "create-trigger-dependabot-${{ github.run_number }}"
       - name: Create pull request
+        if: ${{ github.event.inputs.use-pr }}
         run: gh pr create --title 'Trigger dependabot' --body 'PR created by the trigger-dependabot.yml workflow' --label 'chore'
         env:
           # Todo: comment about using PAT and link to docs.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Merge pull request
+        if: ${{ github.event.inputs.use-pr }}
         run: gh pr merge --squash --admin --delete-branch
         env:
           # Todo: comment about using PAT and link to docs.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Push to main
-        if: ${{ !github.event.inputs.use-pr }}
+        if: ${{ ! github.event.inputs.use-pr }}
         run: git push --set-upstream origin "create-trigger-dependabot-${{ github.run_number }}"
 
 # todo: in add-service, build the code unless using a PAT.
