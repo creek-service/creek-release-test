@@ -13,8 +13,8 @@ on:
         # Todo: add meaningful link if like displayed nicely.
         description: |
            Raise a PR, rather than commit directly. 
-           PRs are compatible with branch protection, but require a PAT to run checks. 
-           See https://cli.github.com/manual/gh_pr_create
+           (PRs are compatible with branch protection, but require a PAT to run checks. 
+           See https://cli.github.com/manual/gh_pr_create)
         type: boolean
         required: false
         default: false
@@ -34,7 +34,7 @@ jobs:
           cat -s .github/dependabot.yml > tmp.yml
           mv -f tmp.yml .github/dependabot.yml
       - name: Dump context
-        run: echo "${{ toJSON(github) }}"
+        run: echo "${{ github }}"
       - name: Configure Git
         run: |
           git config --global user.email "95620007+Creek-Bot@users.noreply.github.com"
