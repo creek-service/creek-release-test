@@ -56,7 +56,7 @@ jobs:
       - name: Create pull request
         if: ${{ github.event.inputs.use-pr == 'true' }}
         run: |
-          echo "Release version: $(gh pr create --title 'Trigger dependabot' --body 'PR created by the [${{ github.workflow }}](${{ github.event.workflow }}) workflow' --label 'chore')" >> $GITHUB_STEP_SUMMARY
+          echo "Release version: $(gh pr create --title 'Trigger dependabot' --body 'PR created by the [${{ github.workflow }}](${{ github.event.workflow }}) workflow, run [${{ github.run_id }}](https://github.com/creek-service/creek-release-test/actions/runs/${{ github.run_id }})' --label 'chore')" >> $GITHUB_STEP_SUMMARY
         env:
           # Todo: comment about using PAT and link to docs.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
