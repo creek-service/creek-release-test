@@ -30,7 +30,7 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
-      - name: Run script
+      - name: Modify dependabot.yml
         run: |
           cat -s .github/dependabot.yml > tmp.yml
           mv -f tmp.yml .github/dependabot.yml
@@ -67,6 +67,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Push to main
         if: ${{ github.event.inputs.use-pr != 'true' }}
-        run: git push --set-upstream origin "create-trigger-dependabot-${{ github.run_number }}"
+        run: git push
 
 # todo: in add-service, build the code unless using a PAT.
