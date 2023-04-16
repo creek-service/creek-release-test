@@ -1,0 +1,66 @@
+# A Workflow for triggering GitHub's dependabot
+#
+# The workflow provides a deterministic API / URL for triggering GitHub's dependabot.
+# The workflow adjusts the whitespace at the end of the .github/dependabot.yml file.
+# Changes to this file trigger dependabot.
+
+name: Trigger dependabot
+
+on:
+  workflow_dispatch:
+    inputs:
+      use-pr:
+        # Todo: add meaningful link if like displayed nicely.
+        description: |
+           Raise a PR, rather than commit directly. 
+           PRs are compatible with branch protection, but require a PAT to run checks. 
+           See https://cli.github.com/manual/gh_pr_create
+        required: false
+permissions:
+  contents: read
+
+jobs:
+  trigger_dependabot:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+      - name: Run script
+        run: |
+          cat -s .github/dependabot.yml > tmp.yml
+          mv -f tmp.yml .github/dependabot.yml
+      - name: Dump context
+        run: echo "${{ toJSON(github) }}"
+      - name: Configure Git
+        run: |
+          git config --global user.email "95620007+Creek-Bot@users.noreply.github.com"
+          git config --global user.name "Creek Bot"
+      - name: Create branch
+        if: ${{ github.event.inputs.use-pr }}
+        run: |
+          git checkout -b "create-trigger-dependabot-${{ github.run_number }}"
+      - name: Add files
+        run: |
+          git status
+          git add -A
+          git commit -m "Trigger dependabot"
+      - name: Push to PR branch
+        if: ${{ github.event.inputs.use-pr }}
+        run: git push --set-upstream origin "create-trigger-dependabot-${{ github.run_number }}"
+      - name: Create pull request
+        run: gh pr create --title 'Trigger dependabot' --body 'PR created by the trigger-dependabot.yml workflow' --label 'chore'
+        env:
+          # Todo: comment about using PAT and link to docs.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Merge pull request
+        run: gh pr merge --squash --admin --delete-branch
+        env:
+          # Todo: comment about using PAT and link to docs.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push to main
+        if: !${{ github.event.inputs.use-pr }}
+        run: git push --set-upstream origin "create-trigger-dependabot-${{ github.run_number }}"
+
+# todo: in add-service, build the code unless using a PAT.
