@@ -26,10 +26,10 @@ jobs:
           cat -s .github/dependabot.yml > tmp.yml
           mv -f tmp.yml .github/dependabot.yml
           
-          # If this doesn't change the file:
+          # If this does not change the file:
           if [[ $(git ls-files -m) == "" ]]; then
             # Append a blank line:
-            echo "" >> .github/dependabot.yml
+            echo >> .github/dependabot.yml
           fi
       - name: Configure Git
         run: |
