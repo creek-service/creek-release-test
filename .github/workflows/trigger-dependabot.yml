@@ -22,9 +22,15 @@ jobs:
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
       - name: Modify dependabot.yml
         run: |
+          # Remove duplicate blank lines in file:
           cat -s .github/dependabot.yml > tmp.yml
           mv -f tmp.yml .github/dependabot.yml
-          echo "" >> .github/dependabot.yml
+          
+          # If this doesn't change the file:
+          if [[ $(git ls-files -m) == "" ]]; then
+            # Append a blank line:
+            echo "" >> .github/dependabot.yml
+          fi
       - name: Configure Git
         run: |
           git config --global user.email "95620007+Creek-Bot@users.noreply.github.com"
