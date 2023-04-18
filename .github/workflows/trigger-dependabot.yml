@@ -8,16 +8,6 @@ name: Trigger dependabot
 
 on:
   workflow_dispatch:
-    inputs:
-      use-pr:
-        # Todo: add meaningful link if like displayed nicely.
-        description: |
-           Raise a PR, rather than commit directly. 
-           (PRs are compatible with branch protection, but require a PAT to run checks. 
-           See https://cli.github.com/manual/gh_pr_create)
-        type: boolean
-        required: false
-        default: 'false'
 
 permissions:
   contents: read
@@ -35,34 +25,16 @@ jobs:
           cat -s .github/dependabot.yml > tmp.yml
           mv -f tmp.yml .github/dependabot.yml
           echo "" >> .github/dependabot.yml
-      - name: Dump Inputs
-        run: echo "'${{ github.event.inputs.use-pr }}'"
       - name: Configure Git
         run: |
           git config --global user.email "95620007+Creek-Bot@users.noreply.github.com"
           git config --global user.name "Creek Bot"
-      - name: Create branch
-        if: ${{ github.event.inputs.use-pr == 'true' }}
-        run: |
-          git checkout -b "create-trigger-dependabot-${{ github.run_number }}"
-      - name: Add files
-        run: |
           git status
           git add -A
           git commit -m "Trigger dependabot"
-      - name: Push to PR branch
-        if: ${{ github.event.inputs.use-pr == 'true' }}
-        run: git push --set-upstream origin "create-trigger-dependabot-${{ github.run_number }}"
+          git push --set-upstream origin "create-trigger-dependabot-${{ github.run_number }}"
       - name: Create pull request
-        if: ${{ github.event.inputs.use-pr == 'true' }}
         run: |
           echo "PR created: $(gh pr create --title 'Trigger dependabot' --body 'PR created by the [${{ github.workflow }}](${{ github.event.workflow }}) workflow, run [${{ github.run_id }}](https://github.com/creek-service/creek-release-test/actions/runs/${{ github.run_id }}).' --label 'chore')" >> $GITHUB_STEP_SUMMARY
         env:
-          # Todo: comment about using PAT and link to docs.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Push to main
-        if: ${{ github.event.inputs.use-pr != 'true' }}
-        run: git push
-
-# todo: in add-service, build the code unless using a PAT.
-# todo: can merge PRs if PAT is admin.... urgmmm.
