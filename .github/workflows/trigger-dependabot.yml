@@ -35,6 +35,6 @@ jobs:
           git push --set-upstream origin "create-trigger-dependabot-${{ github.run_number }}"
       - name: Create pull request
         run: |
-          echo "PR created: $(gh pr create --title 'Trigger dependabot' --body 'PR created by the [${{ github.workflow }}](${{ github.event.workflow }}) workflow, run [${{ github.run_id }}](https://github.com/creek-service/creek-release-test/actions/runs/${{ github.run_id }}).' --label 'chore')" >> $GITHUB_STEP_SUMMARY
+          echo "PR created: $(gh pr create --title 'Trigger dependabot' --body 'PR created by the [${{ github.workflow }}](https://github.com/${{ github.repository }}/blob/main/${{ github.event.workflow }}) workflow, run [${{ github.run_id }}](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}).')" >> $GITHUB_STEP_SUMMARY
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
