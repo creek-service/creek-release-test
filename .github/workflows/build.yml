@@ -72,9 +72,10 @@ jobs:
           ORG_GRADLE_PROJECT_SONA_PASSWORD: ${{ secrets.SONA_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ./gradlew cV
+          # Locally, set the release version, so creekVersion is correct
+          ./gradlew createRelease
+          # note: release promotion disabled as this is just a release test env.
           # ./gradlew publish closeAndReleaseStagingRepositories
-           # note: release promotion disabled as this is just a release test env.
           ./gradlew publish closeStagingRepositories
       - name: Publish to Gradle Plugins Portal
         if: startsWith(github.ref, 'refs/tags/') && !endsWith(github.ref, '-alpha')
