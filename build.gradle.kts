@@ -27,6 +27,13 @@ plugins {
 
 scmVersion {
     versionCreator("simple")
+
+    checks {
+        // Allow project to rely on Creek snapshots for now:
+        //snapshotDependencies.set(false)
+        // Can be useful to uncomment the following
+        //uncommittedChanges.set(false)
+    }
 }
 
 project.version = scmVersion.version
@@ -79,15 +86,6 @@ subprojects {
         testImplementation("com.google.guava:guava-testlib:$guavaVersion")
         testRuntimeOnly("org.apache.logging.log4j:log4j-slf4j2-impl:$log4jVersion")
         testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
-    }
-}
-
-scmVersion {
-    checks {
-        // Allow project to rely on Creek snapshots for now:
-        snapshotDependencies.set(false)
-        // Can be useful to uncomment the following
-        // uncommittedChanges.set(false)
     }
 }
 
