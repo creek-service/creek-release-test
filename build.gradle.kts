@@ -25,7 +25,12 @@ plugins {
     id("pl.allegro.tech.build.axion-release") version "1.15.5"           // https://plugins.gradle.org/plugin/pl.allegro.tech.build.axion-release
 }
 
+scmVersion {
+    versionCreator("simple")
+}
+
 project.version = scmVersion.version
+println("creekVersion: ${project.version}")
 
 allprojects {
     tasks.jar {
@@ -47,7 +52,7 @@ subprojects {
     }
 
     extra.apply {
-        set("creekVersion", "0.4.2-SNAPSHOT")
+        set("creekVersion", project.version)
 
         set("log4jVersion", "2.25.0")           // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
         set("guavaVersion", "33.4.8-jre")         // https://mvnrepository.com/artifact/com.google.guava/guava
