@@ -72,8 +72,6 @@ jobs:
           ORG_GRADLE_PROJECT_SONA_PASSWORD: ${{ secrets.SONA_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Locally, set the release version, so creekVersion is correct
-          ./gradlew createRelease
           # note: release promotion disabled as this is just a release test env.
           # ./gradlew publish closeAndReleaseStagingRepositories
           ./gradlew publish closeStagingRepositories
