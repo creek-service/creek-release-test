@@ -61,11 +61,7 @@ subprojects {
     extra.apply { set("creekVersion", project.version) }
 
     val creekVersion : String by extra
-    val guavaVersion : String by project
-    val log4jVersion : String by project
-    val junitVersion: String by project
-    val junitPioneerVersion: String by project
-    val mockitoVersion: String by project
+    val junitVersion = project.property("junitVersion") as String
 
     dependencies {
         testImplementation("org.creekservice:creek-test-hamcrest:$creekVersion")
@@ -73,10 +69,10 @@ subprojects {
         testImplementation("org.creekservice:creek-test-conformity:$creekVersion")
         testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
         testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
-        testImplementation("org.junit-pioneer:junit-pioneer:$junitPioneerVersion")
-        testImplementation("org.mockito:mockito-junit-jupiter:$mockitoVersion")
-        testImplementation("com.google.guava:guava-testlib:$guavaVersion")
-        testRuntimeOnly("org.apache.logging.log4j:log4j-slf4j2-impl:$log4jVersion")
+        testImplementation("org.junit-pioneer:junit-pioneer:${property("junitPioneerVersion")}")
+        testImplementation("org.mockito:mockito-junit-jupiter:${property("mockitoVersion")}")
+        testImplementation("com.google.guava:guava-testlib:${property("guavaVersion")}")
+        testRuntimeOnly("org.apache.logging.log4j:log4j-slf4j2-impl:${property("log4jVersion")}")
         testImplementation("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
     }
 }
